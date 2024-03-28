@@ -2,29 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:calendar_event_app/views/me_data_source.dart';
 
-
-
-class CalendarWidget extends StatelessWidget {
+class CalendarWidget extends StatefulWidget {
   const CalendarWidget({super.key});
 
   @override
+  State<CalendarWidget> createState() => _CalendarWidgetState();
+}
+
+class _CalendarWidgetState extends State<CalendarWidget> {
+  DateTime minDate = DateTime.now();
+  DateTime maxDate = DateTime.now().add(const Duration(days: 90));
+  List<DateTime> generateBlackoutDates(List<DateTime> eventDates) {
+    List<DateTime> allDates = [];
+    List<DateTime> blackoutDates = [];
+
+    DateTime startDate = DateTime(DateTime.now().year, 1, 1);
+    DateTime endDate = DateTime(DateTime.now().year + 1, 1, 1);
+
+    for (DateTime date = startDate;
+        date.isBefore(endDate);
+        date = date.add(const Duration(days: 1))) {
+      allDates.add(date);
+    }
+    for (DateTime date in allDates) {
+      if (!eventDates.contains(date)) {
+        blackoutDates.add(date);
+      }
+    }
+
+    return blackoutDates;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
     return SfCalendar(
       view: CalendarView.month,
+      minDate: minDate,
+      maxDate: maxDate,
+      showNavigationArrow: true,
       initialSelectedDate: DateTime.now(),
-      
-    dataSource: MeetingDataSource(getDataSource()),
-    monthViewSettings: const MonthViewSettings(
-        appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-
-        selectionDecoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.red, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            shape: BoxShape.rectangle,
-          ),
-      
+      blackoutDatesTextStyle: const TextStyle(color: Colors.grey),
+      dataSource: MeetingDataSource(getDataSource()),
+      blackoutDates: generateBlackoutDates(event),
+      appointmentTextStyle:
+          const TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+      monthViewSettings: const MonthViewSettings(
+          //  showAgenda: true,
+          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
     );
   }
 }
