@@ -12,7 +12,7 @@ List<Meeting> getDataSource() {
   //   final DateTime startime2= DateTime(2024, 03, 23,0,0);
   //     final DateTime startime3 = DateTime(2024, 05, 03,0,0);
   //       final DateTime startime4 = DateTime(2024, 06, 05,0,0);
-  final List<Meeting> events =  event.map((e) => Meeting('', e, e, Colors.green, false)).toList();
+  final List<Meeting> events =  event.map((e) => Meeting('', e, e, Colors.transparent, false)).toList();
   // [
   //    Meeting('', startime1, startime1, Colors.green, false),
   //   Meeting(
